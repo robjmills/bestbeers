@@ -25,7 +25,7 @@ Route::get('/', function()
 		return (array_sum($array) / count($array));
 	}
 
-	$getthebeers = function($last = null,$beers = []) use (&$getthebeers){
+	$getthebeers = function($last = null,$beers = array()) use (&$getthebeers){
 
 		// vars
 		$client_id = 'B38AE3C52EA3BE85AC98F58FB882FA1B296F1D18';
