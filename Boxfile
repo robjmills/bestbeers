@@ -9,6 +9,7 @@ web1:
   php_extensions:
     - apc
     - bcmath
+    - curl
     - mcrypt
     - memcached
     - pdo_mysql

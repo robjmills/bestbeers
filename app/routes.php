@@ -11,7 +11,7 @@
 |
 */
 
-Route::controller('account', 'AccountController');
+#Route::controller('account', 'AccountController');
 Route::controller('/', 'HomeController');
 
 
