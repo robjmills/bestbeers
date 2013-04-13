@@ -61,7 +61,7 @@ Route::get('/', function()
 
 	var_dump($thebeers);
 
-	$unsortedBeers = [];
+	$unsortedBeers = array();
 
 	foreach($thebeers as $beer => $ratings)
 	{
