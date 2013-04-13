@@ -12,7 +12,7 @@
 */
 
 #Route::controller('account', 'AccountController');
-Route::controller('/', 'HomeController');
+#Route::controller('/', 'HomeController');
 
 
 // LOOK INTO weighted mean / weighted average
