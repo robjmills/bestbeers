@@ -1,7 +1,7 @@
 <?php
 
-class HomeController extends BaseController
-{
+class HomeController extends BaseController {
+
 	/*
 	|--------------------------------------------------------------------------
 	| Default Home Controller
@@ -15,9 +15,9 @@ class HomeController extends BaseController
 	|
 	*/
 
-	public function getIndex()
+	public function showWelcome()
 	{
-		return View::make('home.index');
+		return View::make('hello');
 	}
 
 }
