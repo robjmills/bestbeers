@@ -5,8 +5,9 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
         <title>Beershere</title>
         <meta name="viewport" content="width=device-width">
-        <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-combined.min.css" rel="stylesheet">
-        {{ Html::style('css/main.css') }}
+        <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-combined.no-icons.min.css" rel="stylesheet">
+        <link href="//netdna.bootstrapcdn.com/font-awesome/3.0.2/css/font-awesome.css" rel="stylesheet">
+        {{ HTML::style('css/main.css') }}
         @yield('styles')
     </head>
 
@@ -35,7 +36,7 @@
         </div>
     @yield('scripts')   
     <script src="//code.jquery.com/jquery-1.9.1.min.js"></script>
-    {{ Html::script('scripts/geoPosition.js') }}
+    {{ HTML::script('scripts/geoPosition.js') }}
     <script type="text/javascript">
     if(geoPosition.init()){  // Geolocation Initialisation
             geoPosition.getCurrentPosition(success_callback,error_callback,{enableHighAccuracy:true});
@@ -46,16 +47,25 @@
 
     // p : geolocation object
     function success_callback(p){
-    	console.log(p);
-        // p.latitude : latitude value
-        // p.longitude : longitude value
-        	console.log(p.coords.latitude);
-        	console.log(p.coords.longitude);
-
         $.ajax({
 			url: "http://localhost:8000/location?lat="+p.coords.latitude+"&long="+p.coords.longitude
         }).done(function ( data ) {
-        	console.log(data);
+        	var locations = jQuery.parseJSON( data );
+            var venues = locations.response.venues;
+            var nearest = venues[1];
+            $('#info').html("It looks like you're near " + nearest.name);
+            $('#beers').show();
+            $.ajax({
+                url: "http://localhost:8000/beers/"+nearest.id
+            }).done(function ( data ) {
+                var beers = "";
+                for (var key in data) {
+                  if (data.hasOwnProperty(key)) {
+                    beers = (beers + (key + " -> " + data[key] + "<br />"));
+                  }
+                }
+                $('#beers').html(beers);
+            });
         });
     }
 

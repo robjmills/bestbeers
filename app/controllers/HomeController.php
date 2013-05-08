@@ -36,12 +36,19 @@ class HomeController extends BaseController {
 		$request = $client->get($url);
 		// Send the request and get the response
 		$response = $request->send();
-		echo $response->getBody();
-		// >>> {"type":"User", ...
-		//echo $response->getHeader('Content-Length');
+		$body = $response->getBody();
+		return $body;
+		/*
+		$venuearray = array();
+		foreach( $venues as $venue)
+		{
+			$venuearray[] = array($venue->id => $venue->name);
+		}
+		return $venuearray[0];
+		*/
 	}
 
-	public function getUntappdInfo()
+	public function getUntappdInfo($venue)
 	{
 		function average($array)
 		{
