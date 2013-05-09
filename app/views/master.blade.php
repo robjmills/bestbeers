@@ -48,15 +48,15 @@
     // p : geolocation object
     function success_callback(p){
         $.ajax({
-			url: "http://localhost:8000/location?lat="+p.coords.latitude+"&long="+p.coords.longitude
+			url: "/location?lat="+p.coords.latitude+"&long="+p.coords.longitude
         }).done(function ( data ) {
         	var locations = jQuery.parseJSON( data );
             var venues = locations.response.venues;
-            var nearest = venues[1];
+            var nearest = venues[0];
             $('#info').html("It looks like you're near " + nearest.name);
             $('#beers').show();
             $.ajax({
-                url: "http://localhost:8000/beers/"+nearest.id
+                url: "/beers/"+nearest.id
             }).done(function ( data ) {
                 var beers = "";
                 for (var key in data) {
