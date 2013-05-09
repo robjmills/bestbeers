@@ -2,18 +2,15 @@
 
 class HomeController extends BaseController {
 
-	/*
-	|--------------------------------------------------------------------------
-	| Default Home Controller
-	|--------------------------------------------------------------------------
-	|
-	| You may wish to use controllers instead of, or in addition to, Closure
-	| based routes. That's great! Here is an example controller method to
-	| get you started. To route to this controller, just add the route:
-	|
-	|	Route::get('/', 'HomeController@showWelcome');
-	|
-	*/
+	// Foursquare configs
+	public $fs_client_id = "TNKB4HVGPFWKGKZRA5SRG1UIOWCRJYEX0HCYYYKXK4VLP0DE";
+	public $fs_client_secret = "EII0ESCU4ZSFM3IUW4RNDESZVB5V5QHMBSQNDEE2UNHHIESQ";
+	public $fs_category_id = "4d4b7105d754a06376d81259";
+
+	// Untappd configs
+	public $ut_client_id = 'B38AE3C52EA3BE85AC98F58FB882FA1B296F1D18';
+	public $ut_client_secret = '6F0169254D544BA4B41B09D20FCBAEA74ACE6339';
+	public $ut_result_limit = "50";
 
 	public function showWelcome()
 	{
@@ -25,45 +22,37 @@ class HomeController extends BaseController {
 
 		$lat = Request::get('lat');
 		$long = Request::get('long');
-		$client_id = "TNKB4HVGPFWKGKZRA5SRG1UIOWCRJYEX0HCYYYKXK4VLP0DE";
-		$client_secret = "EII0ESCU4ZSFM3IUW4RNDESZVB5V5QHMBSQNDEE2UNHHIESQ";
 		$date = date("Ymd");
 
 		// Create a client and provide a base URL
 		$client = new \Guzzle\Http\Client('https://api.foursquare.com/');
-		$url = '/v2/venues/search?ll='.$lat.','.$long.'&client_id='.$client_id.'&client_secret='.$client_secret.'&v='.$date.'&categoryId=4d4b7105d754a06376d81259';
+		$url = '/v2/venues/search?ll='.$lat.','.$long.'&client_id='.$this->fs_client_id.'&client_secret='.$this->fs_client_secret.'&v='.$date.'&categoryId='.$this->fs_category_id;
 		// Create a request with basic Auth
 		$request = $client->get($url);
 		// Send the request and get the response
 		$response = $request->send();
 		$body = $response->getBody();
 		return $body;
-		/*
-		$venuearray = array();
-		foreach( $venues as $venue)
-		{
-			$venuearray[] = array($venue->id => $venue->name);
-		}
-		return $venuearray[0];
-		*/
 	}
 
-	public function getUntappdInfo($venue)
+	public function getUntappdInfo($venue_id)
 	{
 		function average($array)
 		{
 			return (array_sum($array) / count($array));
 		}
 
-		$getthebeers = function($last = null,$beers = array()) use (&$getthebeers){
+		$client = new Guzzle\Http\Client('http://api.untappd.com/v4/');		
+		$requestString = 'venue/foursquare_lookup/'.$venue_id.'?client_id='. $this->ut_client_id .'&client_secret='. $this->ut_client_secret;
+		$request = $client->get($requestString);
+		$response = $request->send();
+		$responses = json_decode($response->getBody(),true);
+		$venue_id = $responses['response']['venue']['items'][0]['venue_id'];
 
-			// vars
-			$client_id = 'B38AE3C52EA3BE85AC98F58FB882FA1B296F1D18';
-			$client_secret = '6F0169254D544BA4B41B09D20FCBAEA74ACE6339';
-			$limit = '50';
+		$getthebeers = function($venue_id, $last = null,$beers = array()) use (&$getthebeers){
 
-			$client = new Guzzle\Http\Client('http://api.untappd.com/v4');		
-			$requestString = '/v4/venue/checkins/448060?limit='. $limit .'&client_id='. $client_id .'&client_secret='. $client_secret;
+			$client = new Guzzle\Http\Client('http://api.untappd.com/v4/');		
+			$requestString = '/v4/venue/checkins/'.$venue_id.'?limit='. $this->ut_result_limit .'&client_id='. $this->ut_client_id .'&client_secret='. $this->ut_client_secret;
 
 			if($last != null){
 				$requestString .= '&min_id='.$last;	
@@ -82,12 +71,12 @@ class HomeController extends BaseController {
 			}
 
 			if($last == null){			
-				return $getthebeers($checkin_id, $beers);
+				return $getthebeers($venue_id, $checkin_id, $beers);
 			}else{
 				return $beers;
 			}
 		};
-		$thebeers = $getthebeers();
+		$thebeers = $getthebeers($venue_id);
 
 		$unsortedBeers = array();
 
@@ -97,6 +86,7 @@ class HomeController extends BaseController {
 			$unsortedBeers[$beer] = $rating;
 		}
 		arsort($unsortedBeers);
+		return Response::Json($unsortedBeers);
 	}
 
 }
