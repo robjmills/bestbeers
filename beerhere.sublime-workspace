@@ -135,7 +135,7 @@
 			"file": "app/controllers/HomeController.php",
 			"settings":
 			{
-				"buffer_size": 2911,
+				"buffer_size": 3019,
 				"line_ending": "Unix"
 			}
 		},
@@ -188,10 +188,10 @@
 			}
 		},
 		{
-			"file": "app/config/database.php",
+			"file": "Boxfile",
 			"settings":
 			{
-				"buffer_size": 3322,
+				"buffer_size": 729,
 				"line_ending": "Unix"
 			}
 		}
@@ -199,7 +199,7 @@
 	"build_system": "",
 	"command_palette":
 	{
-		"height": 47.0,
+		"height": 392.0,
 		"selected_items":
 		[
 			[
@@ -243,7 +243,7 @@
 				"Snippet: DOCTYPE HTML"
 			]
 		],
-		"width": 530.0
+		"width": 593.0
 	},
 	"console":
 	{
@@ -260,6 +260,7 @@
 	},
 	"file_history":
 	[
+		"/Users/robmills/Sites/beerhere/app/config/database.php",
 		"/Users/robmills/Sites/beerhere/app/views/layouts/default.blade.php",
 		"/Users/robmills/Sites/prodsapi/app/models/Prodsapi.php",
 		"/Users/robmills/Sites/prodsapi/app/models/Prodsapi",
@@ -386,8 +387,7 @@
 		"/Users/robmills/Sites/l4/app/views/photos/edit.blade.php",
 		"/Users/robmills/Sites/l4/app/views/master.blade.php",
 		"/Users/robmills/Sites/l4/app/routes.php",
-		"/Users/robmills/Sites/l4/app/config/database.php",
-		"/Users/robmills/Sites/l4/app/database/seeds/PhotosTableSeeder.php"
+		"/Users/robmills/Sites/l4/app/config/database.php"
 	],
 	"find":
 	{
@@ -708,15 +708,15 @@
 					"file": "app/controllers/HomeController.php",
 					"settings":
 					{
-						"buffer_size": 2911,
+						"buffer_size": 3019,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								1493,
-								1493
+								2629,
+								2629
 							]
 						],
 						"settings":
@@ -859,7 +859,7 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 18.0,
+						"translation.y": 365.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -1181,7 +1181,7 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 183.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -1342,7 +1342,7 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 2022.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -1502,7 +1502,7 @@
 							"syntax": "Packages/HTML5/Syntaxes/HTML 5.tmLanguage"
 						},
 						"translation.x": 0.0,
-						"translation.y": 354.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -1830,18 +1830,18 @@
 				},
 				{
 					"buffer": 8,
-					"file": "app/config/database.php",
+					"file": "Boxfile",
 					"settings":
 					{
-						"buffer_size": 3322,
+						"buffer_size": 729,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								0,
-								0
+								255,
+								255
 							]
 						],
 						"settings":
@@ -1980,11 +1980,12 @@
 								"Ruby on Rails": "ruby"
 							},
 							"sublimelinter_wrap_find": true,
-							"syntax": "Packages/HTML5/Syntaxes/HTML 5.tmLanguage",
-							"translate_tabs_to_spaces": false
+							"syntax": "Packages/Text/Plain text.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 197.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -2302,11 +2303,15 @@
 	},
 	"select_project":
 	{
-		"height": 0.0,
+		"height": 500.0,
 		"selected_items":
 		[
+			[
+				"",
+				"/Users/robmills/Sites/sooqio/sooqio.sublime-project"
+			]
 		],
-		"width": 0.0
+		"width": 380.0
 	},
 	"show_minimap": true,
 	"show_open_files": false,
