@@ -49,10 +49,10 @@ class HomeController extends BaseController {
 		$responses = json_decode($response->getBody(),true);
 		$venue_id = $responses['response']['venue']['items'][0]['venue_id'];
 
-		$getthebeers = function($venue_id, $last = null,$beers = array()) use (&$getthebeers){
+		$getthebeers = function($venue_id, $limit, $client_id, $client_secret, $last = null,$beers = array()) use (&$getthebeers){
 
 			$client = new Guzzle\Http\Client('http://api.untappd.com/v4/');		
-			$requestString = '/v4/venue/checkins/'.$venue_id.'?limit='. $this->ut_result_limit .'&client_id='. $this->ut_client_id .'&client_secret='. $this->ut_client_secret;
+			$requestString = '/v4/venue/checkins/'.$venue_id.'?limit='. $limit .'&client_id='. $client_id .'&client_secret='. $client_secret;
 
 			if($last != null){
 				$requestString .= '&min_id='.$last;	
@@ -71,12 +71,12 @@ class HomeController extends BaseController {
 			}
 
 			if($last == null){			
-				return $getthebeers($venue_id, $checkin_id, $beers);
+				return $getthebeers($venue_id, $limit, $client_id, $client_secret, $checkin_id, $beers);
 			}else{
 				return $beers;
 			}
 		};
-		$thebeers = $getthebeers($venue_id);
+		$thebeers = $getthebeers($venue_id, $this->ut_result_limit, $this->ut_client_id, $this->ut_client_secret);
 
 		$unsortedBeers = array();
 
