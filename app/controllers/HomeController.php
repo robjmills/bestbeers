@@ -5,7 +5,14 @@ class HomeController extends BaseController {
 	// Foursquare configs
 	public $fs_client_id = "TNKB4HVGPFWKGKZRA5SRG1UIOWCRJYEX0HCYYYKXK4VLP0DE";
 	public $fs_client_secret = "EII0ESCU4ZSFM3IUW4RNDESZVB5V5QHMBSQNDEE2UNHHIESQ";
-	public $fs_category_id = "4d4b7105d754a06376d81259";
+	public $fs_category_id = array("4d4b7105d754a06376d81259", "4d4b7105d754a06374d81259","4bf58dd8d48988d1e5931735"); // music venue
+
+	/* 
+	Food - 4d4b7105d754a06374d81259 
+	Nightlife spot - 4d4b7105d754a06376d81259
+	Bar - 4bf58dd8d48988d116941735 (inside Nightlife spot)
+	Music venue - 4bf58dd8d48988d1e5931735
+	*/
 
 	// Untappd configs
 	public $ut_client_id = 'B38AE3C52EA3BE85AC98F58FB882FA1B296F1D18';
@@ -26,7 +33,7 @@ class HomeController extends BaseController {
 
 		// Create a client and provide a base URL
 		$client = new \Guzzle\Http\Client('https://api.foursquare.com/');
-		$url = '/v2/venues/search?ll='.$lat.','.$long.'&client_id='.$this->fs_client_id.'&client_secret='.$this->fs_client_secret.'&v='.$date.'&categoryId='.$this->fs_category_id;
+		$url = '/v2/venues/search?ll='.$lat.','.$long.'&client_id='.$this->fs_client_id.'&client_secret='.$this->fs_client_secret.'&v='.$date.'&categoryId='.implode(',',$this->fs_category_id);
 		// Create a request with basic Auth
 		$request = $client->get($url);
 		// Send the request and get the response
