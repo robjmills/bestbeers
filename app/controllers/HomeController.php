@@ -5,7 +5,7 @@ class HomeController extends BaseController {
 	// Foursquare configs
 	public $fs_client_id = "TNKB4HVGPFWKGKZRA5SRG1UIOWCRJYEX0HCYYYKXK4VLP0DE";
 	public $fs_client_secret = "EII0ESCU4ZSFM3IUW4RNDESZVB5V5QHMBSQNDEE2UNHHIESQ";
-	public $fs_category_id = array("4d4b7105d754a06376d81259", "4d4b7105d754a06374d81259","4bf58dd8d48988d1e5931735"); // music venue
+	public $fs_category_id = array("4d4b7105d754a06376d81259","4bf58dd8d48988d1e5931735"); // music venue
 
 	/* 
 	Food - 4d4b7105d754a06374d81259 
