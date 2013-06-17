@@ -53,12 +53,18 @@
         	var locations = jQuery.parseJSON( data );
             var venues = locations.response.venues;
             var nearest = venues[0];
+
+            // hardcode to no1 harbourside
+            //nearest.id = '4e593b5962e1de72f6ef0d38';
+            //nearest.name = 'no1 harbourside';
+
             $('#info').html("It looks like you're near " + nearest.name);
             $('#beers').show();
             $.ajax({
                 url: "/beers/"+nearest.id
             }).done(function ( data ) {
                 var beers = "";
+                console.log(data);
                 for (var key in data) {
                   if (data.hasOwnProperty(key)) {
                     beers = (beers + (key + " -> " + data[key] + "<br />"));

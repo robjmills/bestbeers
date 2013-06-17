@@ -71,7 +71,8 @@ class HomeController extends BaseController {
 
 			foreach($responses['response']['checkins']['items'] as $checkin){
 				if($checkin['rating_score'] > 0){
-					$beer_key = $checkin['beer']['beer_name'].' by '.$checkin['brewery']['brewery_name'];
+					//$beer_key = $checkin['beer']['beer_name'].' by '.$checkin['brewery']['brewery_name'];
+					$beer_key = $checkin['beer']['bid'];
 					$beers[$beer_key][] = $checkin['rating_score'];
 					$checkin_id = $checkin['checkin_id'];
 				}
@@ -90,7 +91,16 @@ class HomeController extends BaseController {
 		foreach($thebeers as $beer => $ratings)
 		{
 			$rating = average($ratings);
-			$unsortedBeers[$beer] = $rating;
+			$client = new Guzzle\Http\Client('http://api.untappd.com/v4/');		
+			$requestString = '/v4/beer/info/'.$beer.'?client_id='. $this->ut_client_id .'&client_secret='. $this->ut_client_secret;
+			$request = $client->get($requestString);
+			$response = $request->send();
+			$responses = json_decode($response->getBody(),true);
+			$cleanresponse = $responses['response']['beer'];
+			$overallrating = $cleanresponse['rating_score'];
+			$ratings = array($ratings,$overallrating);
+			$beerdeets = $cleanresponse['beer_name'].' by '.$cleanresponse['brewery']['brewery_name'];
+			$unsortedBeers[$beerdeets] = $ratings;
 		}
 		arsort($unsortedBeers);
 		return Response::Json($unsortedBeers);
