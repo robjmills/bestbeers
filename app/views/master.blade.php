@@ -64,7 +64,6 @@
                 url: "/beers/"+nearest.id
             }).done(function ( data ) {
                 var beers = "";
-                console.log(data);
                 for (var key in data) {
                   if (data.hasOwnProperty(key)) {
                     beers = (beers + (key + " -> " + data[key] + "<br />"));
