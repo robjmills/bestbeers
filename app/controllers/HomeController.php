@@ -21,7 +21,8 @@ class HomeController extends BaseController {
 
 	public function showWelcome()
 	{
-		return View::make('home.index');
+		dd(new Untappd\Untappd);
+		//return View::make('home.index');
 	}
 
 	public function getLocation()
