@@ -26,7 +26,8 @@ $app = new Illuminate\Foundation\Application;
 
 $env = $app->detectEnvironment(array(
 
-	'local' => array('Robs-rMBP.local'),
+	'local'	=> array('Robs-rMBP.local'),
+	'pagoda' => array('http://beerhere.gopagoda.com/')
 
 ));
 
