@@ -19,6 +19,8 @@ web1:
     - rar
   php_session_save_handler: redis
   php_session_save_path: "tcp://tunnel.pagodabox.com:6379"
+  env:
+    - LARAVEL_ENV: pagoda
   after_build:
     - "if [ ! -f composer.phar ]; then curl -s http://getcomposer.org/installer | php; fi; php composer.phar install  --prefer-source"
   before_deploy:
