@@ -1,6 +1,6 @@
 global:
   env:
-    - LARAVEL_ENV: production
+    - LARAVEL_ENV: pagoda
 web1:
   php_version: 5.4.14
   shared_writable_dirs:
