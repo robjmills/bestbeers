@@ -14,7 +14,9 @@ use Untappd\Untappd;
 
 Route::get('/', function(){
 
-	dd(Config::get('app.url').'/authenticate');
+	var_dump($_ENV);
+	var_dump($_SERVER);
+	die();
 
 	$untappd = new Untappd([
 		'client_id' 	=> 'B38AE3C52EA3BE85AC98F58FB882FA1B296F1D18',
