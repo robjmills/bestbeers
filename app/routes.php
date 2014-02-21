@@ -14,10 +14,6 @@ use Untappd\Untappd;
 
 Route::get('/', function(){
 
-	var_dump($_ENV);
-	var_dump($_SERVER);
-	die();
-
 	$untappd = new Untappd([
 		'client_id' 	=> 'B38AE3C52EA3BE85AC98F58FB882FA1B296F1D18',
 		'client_secret' => '6F0169254D544BA4B41B09D20FCBAEA74ACE6339',

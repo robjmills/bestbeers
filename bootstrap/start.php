@@ -26,7 +26,7 @@ $app = new Illuminate\Foundation\Application;
 
 $env = $app->detectEnvironment(array(
 
-	'local'	=> array('Robs-rMBP.local')
+	return getenv('LARAVEL_ENV') ?: 'local';
 
 ));
 
