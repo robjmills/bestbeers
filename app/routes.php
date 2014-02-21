@@ -11,36 +11,45 @@
 |
 */
 use Untappd\Untappd;
-use Guzzle\Http\Client;
 
 Route::get('/', function(){
-	$untappd = new Untappd(
-		'B38AE3C52EA3BE85AC98F58FB882FA1B296F1D18',
-		'6F0169254D544BA4B41B09D20FCBAEA74ACE6339',
-		'http://beerhere.gopagoda.com/authenticate'
-	);
+
+	$untappd = new Untappd([
+		'client_id' 	=> 'B38AE3C52EA3BE85AC98F58FB882FA1B296F1D18',
+		'client_secret' => '6F0169254D544BA4B41B09D20FCBAEA74ACE6339',
+		'redirect_url'	=> Config::get('app.url').'/authenticate'
+	]);
 	$redirect = $untappd->getAuthenticateUrl();
 	return Redirect::to($redirect);
 });
 
 Route::get('/authenticate', function(){
+
+	// get oauth code returned
 	$authcode =  Request::get('code');
-	$untappd = new Untappd(
-		'B38AE3C52EA3BE85AC98F58FB882FA1B296F1D18',
-		'6F0169254D544BA4B41B09D20FCBAEA74ACE6339',
-		'http://beerhere.gopagoda.com/authorise'
-	);
+	
+	// request access token
+	$untappd = new Untappd([
+		'client_id' 	=> 'B38AE3C52EA3BE85AC98F58FB882FA1B296F1D18',
+		'client_secret' => '6F0169254D544BA4B41B09D20FCBAEA74ACE6339',
+		'redirect_url'	=> Config::get('app.url').'/authenticate'
+	]);
 	$redirect = $untappd->getAuthoriseUrl($authcode);
+	$untappd->authorise($redirect);
 
-	$client = new Client();
-	$request = $client->get($redirect);
-	$response = $request->send();
-	$responses = json_decode($response->getBody(),true);
-	dd($responses);
-});
+	$responses = $untappd->getCommand('venue/checkins/448060/',[
+		'limit' => '100'
+	]);
 
-Route::get('/authorise', function(){
-	return Request::all();
+	foreach($responses['response']['checkins']['items'] as $checkin){
+		if($checkin['rating_score'] > 0){
+			$beer_key = $checkin['beer']['beer_name'].' by '.$checkin['brewery']['brewery_name'];
+			$beers[$beer_key][] = $checkin['rating_score'];
+			$checkin_id = $checkin['checkin_id'];
+		}
+	}
+	dd($beers);
+
 });
 
 /*

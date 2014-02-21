@@ -4,33 +4,76 @@ use Guzzle\Http\Client;
 
 class Untappd{
 
-	// protected properties
-	protected $client_id = "";
-	protected $client_secret = "";
-	protected $redirect_url = "";
-	protected $access_token = "";
+	// private properties
+	private $client_id = "";
+	private $client_secret = "";
+	private $redirect_url = "";
+	private $access_token = "";
 
-	// public properties
-	public $apiBase = "https://api.untappd.com/v4";
+	// untappd API urls
+	public $apiBase = "https://api.untappd.com/v4/";
     public $authenticateURL = "https://untappd.com/oauth/authenticate/";
     public $authorizeURL = "https://untappd.com/oauth/authorize/";
 
-	public function __construct($client_id, $client_secret, $redirect_url = null, $access_token = NULL) 
+	public function __construct($config = []) 
 	{
-		$this->client_id = $client_id;
-		$this->client_secret = $client_secret;
-		$this->redirect_url = $redirect_url;
-		$this->access_token = $access_token;
+		$this->client_id = (isset($config['client_id'])) ? $config['client_id'] : '';
+		$this->client_secret = (isset($config['client_secret'])) ? $config['client_secret'] : '';
+		$this->redirect_url = (isset($config['redirect_url'])) ? $config['redirect_url'] : '';
 	}
 
 	public function getAuthenticateUrl()
 	{
-		return $this->authenticateURL."?client_id=".$this->client_id."&response_type=code&redirect_url=".$this->redirect_url;
+		return $this->authenticateURL.
+			"?client_id=".$this->client_id.
+			"&response_type=code".
+			"&redirect_url=".$this->redirect_url;
 	}
 
 	public function getAuthoriseUrl($code)
 	{
-		return $this->authorizeURL . "?client_id=".$this->client_id."&client_secret=".$this->client_secret."&response_type=code&redirect_url=".$this->redirect_url."&code=".$code;
+		return $this->authorizeURL . 
+			"?client_id=".$this->client_id.
+			"&client_secret=".$this->client_secret.
+			"&response_type=code".
+			"&redirect_url=".$this->redirect_url.
+			"&code=".$code;
+	}
+
+	private function setAccessToken($token)
+	{
+		$this->access_token = $token;
+	}
+
+	public function authorise($url)
+	{
+		$responses = $this->client($url);
+		$token = $responses['response']['access_token'];
+		$this->setAccessToken($token);
+	}
+
+	public function getCommand($method, $params = [])
+	{
+		$url = $this->apiBase.$method;
+
+		// merge passed params with existing params
+		$params = array_merge($params,["access_token" => $this->access_token]);
+		$responses = $this->client($url,$params);
+		return $responses;
+	}
+
+
+	private function client($url, $params = [], $method="get")
+	{
+		$client = new Client();
+		if ( count($params) > 0 )
+		{
+			$client->setDefaultOption('query', $params);	
+		}
+		$request = $client->get($url);
+		$response = $request->send();
+		$responses = json_decode($response->getBody(),true);
+		return $responses;
 	}
 
 }

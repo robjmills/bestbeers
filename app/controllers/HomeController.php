@@ -1,5 +1,7 @@
 <?php
 
+use Untappd\Untappd;
+
 class HomeController extends BaseController {
 
 	// Foursquare configs
