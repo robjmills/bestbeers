@@ -14,12 +14,10 @@ use Untappd\Untappd;
 
 Route::get('/', function(){
 
-	dd(Config::get('app.url').'/authenticate');
-
 	$untappd = new Untappd([
-		'client_id' 	=> 'B38AE3C52EA3BE85AC98F58FB882FA1B296F1D18',
-		'client_secret' => '6F0169254D544BA4B41B09D20FCBAEA74ACE6339',
-		'redirect_url'	=> Config::get('app.url').':8000/authenticate'
+		'client_id' 	=> ((getenv('LARAVEL_ENV')) ? 'B38AE3C52EA3BE85AC98F58FB882FA1B296F1D18' : '18051719157E761ACCA272D87CA799C402A45E81'),
+		'client_secret' => ((getenv('LARAVEL_ENV')) ? '6F0169254D544BA4B41B09D20FCBAEA74ACE6339' : '3EAF42B8B6D8E29A616436959243775783C11D57'),
+		'redirect_url'	=> Config::get('app.url').'/authenticate'
 	]);
 	$redirect = $untappd->getAuthenticateUrl();
 	return Redirect::to($redirect);
@@ -32,9 +30,9 @@ Route::get('/authenticate', function(){
 	
 	// request access token
 	$untappd = new Untappd([
-		'client_id' 	=> 'B38AE3C52EA3BE85AC98F58FB882FA1B296F1D18',
-		'client_secret' => '6F0169254D544BA4B41B09D20FCBAEA74ACE6339',
-		'redirect_url'	=> Config::get('app.url').':8000/authenticate'
+		'client_id' 	=> ((getenv('LARAVEL_ENV')) ? 'B38AE3C52EA3BE85AC98F58FB882FA1B296F1D18' : '18051719157E761ACCA272D87CA799C402A45E81'),
+		'client_secret' => ((getenv('LARAVEL_ENV')) ? '6F0169254D544BA4B41B09D20FCBAEA74ACE6339' : '3EAF42B8B6D8E29A616436959243775783C11D57'),
+		'redirect_url'	=> Config::get('app.url').'/authenticate'
 	]);
 	$redirect = $untappd->getAuthoriseUrl($authcode);
 	$untappd->authorise($redirect);
