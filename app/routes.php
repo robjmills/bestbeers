@@ -35,20 +35,26 @@ Route::get('/authenticate', function(){
 		'redirect_url'	=> Config::get('app.url').'/authenticate'
 	]);
 	$redirect = $untappd->getAuthoriseUrl($authcode);
-	$untappd->authorise($redirect);
+	
+	if($untappd->authorise($redirect) == true)
+	{
+		$responses = $untappd->getCommand('venue/checkins/448060/',[
+			'limit' => '100'
+		]);
 
-	$responses = $untappd->getCommand('venue/checkins/448060/',[
-		'limit' => '100'
-	]);
-
-	foreach($responses['response']['checkins']['items'] as $checkin){
-		if($checkin['rating_score'] > 0){
-			$beer_key = $checkin['beer']['beer_name'].' by '.$checkin['brewery']['brewery_name'];
-			$beers[$beer_key][] = $checkin['rating_score'];
-			$checkin_id = $checkin['checkin_id'];
+		foreach($responses['response']['checkins']['items'] as $checkin){
+			if($checkin['rating_score'] > 0){
+				$beer_key = $checkin['beer']['beer_name'].' by '.$checkin['brewery']['brewery_name'];
+				$beers[$beer_key][] = $checkin['rating_score'];
+				$checkin_id = $checkin['checkin_id'];
+			}
 		}
+		dd($beers);	
 	}
-	dd($beers);
+	else
+	{
+		echo $untappd->getError();
+	}
 
 });
 

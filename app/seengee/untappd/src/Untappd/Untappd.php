@@ -9,6 +9,7 @@ class Untappd{
 	private $client_secret = "";
 	private $redirect_url = "";
 	private $access_token = "";
+	protected $error = "";
 
 	// untappd API urls
 	public $apiBase = "https://api.untappd.com/v4/";
@@ -45,11 +46,30 @@ class Untappd{
 		$this->access_token = $token;
 	}
 
+	private function setError($error)
+	{
+		$this->error = $error;
+	}
+
+	public function getError()
+	{
+		return $this->error;
+	}
+
 	public function authorise($url)
 	{
 		$responses = $this->client($url);
-		$token = $responses['response']['access_token'];
-		$this->setAccessToken($token);
+		if($responses['meta']['http_code'] == '200')
+		{
+			$token = $responses['response']['access_token'];
+			$this->setAccessToken($token);
+			return true;
+		}
+		else
+		{
+			$this->setError($responses['meta']['error_detail']);
+			return false;
+		}
 	}
 
 	public function getCommand($method, $params = [])
