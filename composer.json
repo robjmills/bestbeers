@@ -16,8 +16,8 @@
 			"app/database/seeds",
 			"app/tests/TestCase.php"
 		],
-		"psr-0" : {
-			"Untappd" : "app/seengee/untappd/src/"
+		"psr-4" : {
+			"Untappd\\" : "app/seengee/untappd/src/"
 		}
 	},
 	"scripts": {

@@ -14,8 +14,8 @@
         "guzzle/guzzle": "3.7.*@dev"
     },
     "autoload": {
-        "psr-0": {
-            "Untappd": "src/"
+        "psr-4": {
+            "Untappd\\": "src"
         }
     }
 }
