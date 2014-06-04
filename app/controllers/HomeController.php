@@ -23,8 +23,7 @@ class HomeController extends BaseController {
 
 	public function showWelcome()
 	{
-		dd(new Untappd\Untappd);
-		//return View::make('home.index');
+		return View::make('home.index');
 	}
 
 	public function getLocation()
@@ -35,10 +34,12 @@ class HomeController extends BaseController {
 		$date = date("Ymd");
 
 		// Create a client and provide a base URL
-		$client = new \Guzzle\Http\Client('https://api.foursquare.com/');
+		$client = new GuzzleHttp\Client('https://api.foursquare.com/');
 		$url = '/v2/venues/search?ll='.$lat.','.$long.'&client_id='.$this->fs_client_id.'&client_secret='.$this->fs_client_secret.'&v='.$date.'&categoryId='.implode(',',$this->fs_category_id);
+
 		// Create a request with basic Auth
 		$request = $client->get($url);
+
 		// Send the request and get the response
 		$response = $request->send();
 		$body = $response->getBody();
@@ -52,7 +53,7 @@ class HomeController extends BaseController {
 			return (array_sum($array) / count($array));
 		}
 
-		$client = new Guzzle\Http\Client('http://api.untappd.com/v4/');		
+		$client = new GuzzleHttp\Client('http://api.untappd.com/v4/');
 		$requestString = 'venue/foursquare_lookup/'.$venue_id.'?client_id='. $this->ut_client_id .'&client_secret='. $this->ut_client_secret;
 		$request = $client->get($requestString);
 		$response = $request->send();
@@ -61,7 +62,7 @@ class HomeController extends BaseController {
 
 		$getthebeers = function($venue_id, $limit, $client_id, $client_secret, $last = null,$beers = array()) use (&$getthebeers){
 
-			$client = new Guzzle\Http\Client('http://api.untappd.com/v4/');		
+			$client = new GuzzleHttp\Client('http://api.untappd.com/v4/');
 			$requestString = '/v4/venue/checkins/'.$venue_id.'?limit='. $limit .'&client_id='. $client_id .'&client_secret='. $client_secret;
 
 			if($last != null){
@@ -96,7 +97,7 @@ class HomeController extends BaseController {
 			$rating = average($ratings);
 			$unsortedBeers[$beer] = $rating;
 			/*
-			$client = new Guzzle\Http\Client('http://api.untappd.com/v4/');		
+			$client = new GuzzleHttp\Client('http://api.untappd.com/v4/');
 			$requestString = '/v4/beer/info/'.$beer.'?client_id='. $this->ut_client_id .'&client_secret='. $this->ut_client_secret;
 			$request = $client->get($requestString);
 			$response = $request->send();

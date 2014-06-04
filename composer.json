@@ -10,9 +10,9 @@
 	   }
 	],
 	"require": {
-		"laravel/framework": "4.1.*",
-		"guzzle/guzzle": "3.7.*@dev",
-		"robjmills/untappd": "dev-master"
+		"laravel/framework": "4.2.*",
+        "guzzlehttp/guzzle": "4.*",
+		"robjmills/untappd": "dev-master@dev"
 	},
 	"autoload": {
 		"classmap": [
