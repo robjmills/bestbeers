@@ -19,16 +19,16 @@ $app = new Illuminate\Foundation\Application;
 |--------------------------------------------------------------------------
 |
 | Laravel takes a dead simple approach to your application environments
-| so you can just specify a machine name or HTTP host that matches a
+| so you can just specify a machine name for the host that matches a
 | given environment, then we will automatically detect it for you.
 |
 */
 
-// Default to local if LARAVEL_ENV is not set
-$env = $app->detectEnvironment(function()
-{
-	return getenv('LARAVEL_ENV') ? getenv('LARAVEL_ENV') : 'local';
-});
+$env = $app->detectEnvironment(array(
+
+	'local' => array('Robs-rMBP.local'),
+
+));
 
 /*
 |--------------------------------------------------------------------------
@@ -54,7 +54,8 @@ $app->bindInstallPaths(require __DIR__.'/paths.php');
 |
 */
 
-$framework = $app['path.base'].'/vendor/laravel/framework/src';
+$framework = $app['path.base'].
+                 '/vendor/laravel/framework/src';
 
 require $framework.'/Illuminate/Foundation/start.php';
 
