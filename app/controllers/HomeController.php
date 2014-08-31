@@ -45,49 +45,36 @@ class HomeController extends BaseController {
 
 	public function getUntappdInfo($venue_id)
 	{
-
-        // translate the foursquare venue to the untappd venue
         $untappd = new Untappd([
             'client_id' 	=> $_ENV['UNTAPPD_CLIENT_ID'],
             'client_secret' => $_ENV['UNTAPPD_CLIENT_SECRET']
         ]);
 
+        // translate the foursquare venue to the untappd venue
         $responses = $untappd->query('venue/foursquare_lookup/'.$venue_id,[
             'client_id'     => $_ENV['FOURSQUARE_CLIENT_ID'],
             'client_secret' => $_ENV['FOURSQUARE_CLIENT_SECRET'],
             'access_token'  => Session::get('utauth')
         ]);
 
+        // venue ID used by Untappd
         $utVenueId = $responses['response']['venue']['items'][0]['venue_id'];
 
-        $responses = $untappd->query('venue/checkins/'.$utVenueId,[
-            'client_id'     => $_ENV['FOURSQUARE_CLIENT_ID'],
-            'client_secret' => $_ENV['FOURSQUARE_CLIENT_SECRET'],
-            'access_token'  => Session::get('utauth')
-        ]);
+        // stupid code that isn't as clever as it thinks it is
+		$getthebeers = function(Untappd $untappd, $venue_id, $checkin_id = null,$beers = []) use (&$getthebeers){
 
-        foreach($responses['response']['checkins']['items'] as $checkin){
-            if($checkin['rating_score'] > 0){
-                $beer_key = $checkin['beer']['beer_name'].' by '.$checkin['brewery']['brewery_name'];
-                $beers[$beer_key][] = $checkin['rating_score'];
-                $checkin_id = $checkin['checkin_id'];
+            $params = [
+                'client_id'     => $_ENV['FOURSQUARE_CLIENT_ID'],
+                'client_secret' => $_ENV['FOURSQUARE_CLIENT_SECRET'],
+                'ut_result_limit' => 50,
+                'access_token'  => Session::get('utauth')
+            ];
+
+            if($checkin_id != null){
+                $params = ($params + ['min_id' => $checkin_id]);
             }
-        }
-        return Response::json($beers);
 
-        /*
-		$getthebeers = function($venue_id, $limit, $client_id, $client_secret, $last = null,$beers = array()) use (&$getthebeers){
-
-			$client = new GuzzleHttp\Client('http://api.untappd.com/v4/');
-			$requestString = '/v4/venue/checkins/'.$venue_id.'?limit='. $limit .'&client_id='. $client_id .'&client_secret='. $client_secret;
-
-			if($last != null){
-				$requestString .= '&min_id='.$last;	
-			}
-
-			$request = $client->get($requestString);
-			$response = $request->send();
-			$responses = json_decode($response->getBody(),true);
+            $responses = $untappd->query('venue/checkins/'.$venue_id, $params);
 
 			foreach($responses['response']['checkins']['items'] as $checkin){
 				if($checkin['rating_score'] > 0){
@@ -98,14 +85,16 @@ class HomeController extends BaseController {
 				}
 			}
 
-			if($last == null){			
-				return $getthebeers($venue_id, $limit, $client_id, $client_secret, $checkin_id, $beers);
+			if($checkin_id == null){
+				return $getthebeers($untappd, $venue_id, $checkin_id, $beers);
 			}else{
 				return $beers;
 			}
 		};
-		$thebeers = $getthebeers($venue_id, $this->ut_result_limit, $this->ut_client_id, $this->ut_client_secret);
+		$thebeers = $getthebeers($untappd, $utVenueId);
 
+        return Response::Json($thebeers);
+        /*
 		$unsortedBeers = array();
 
 		foreach($thebeers as $beer => $ratings)
@@ -128,7 +117,6 @@ class HomeController extends BaseController {
 		arsort($unsortedBeers);
 		return Response::Json($unsortedBeers);
         */
-
 	}
 
 }

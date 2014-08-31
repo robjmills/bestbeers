@@ -35,7 +35,7 @@
             @yield('content')
         </div>
     @yield('scripts')   
-    <script src="//code.jquery.com/jquery-1.9.1.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     {{ HTML::script('scripts/geoPosition.js') }}
     <script type="text/javascript">
     if(geoPosition.init()){  // Geolocation Initialisation
