@@ -12,11 +12,15 @@
 */
 use Untappd\Untappd;
 
-Route::get('/', function(){
+Route::get('/', 'HomeController@showHome');
+Route::get('/location', 'HomeController@getFoursquareVenue');
+Route::get('/beers/{venue_id}', 'HomeController@getUntappdInfo');
+
+Route::get('/login', function(){
 
 	$untappd = new Untappd([
-		'client_id' 	=> ((getenv('LARAVEL_ENV')) ? 'B38AE3C52EA3BE85AC98F58FB882FA1B296F1D18' : '18051719157E761ACCA272D87CA799C402A45E81'),
-		'client_secret' => ((getenv('LARAVEL_ENV')) ? '6F0169254D544BA4B41B09D20FCBAEA74ACE6339' : '3EAF42B8B6D8E29A616436959243775783C11D57'),
+		'client_id' 	=> $_ENV['UNTAPPD_CLIENT_ID'],
+		'client_secret' => $_ENV['UNTAPPD_CLIENT_SECRET'],
 		'redirect_url'	=> Config::get('app.url').'/authenticate'
 	]);
 	$redirect = $untappd->getAuthenticateUrl();
@@ -30,15 +34,19 @@ Route::get('/authenticate', function(){
 	
 	// request access token
 	$untappd = new Untappd([
-		'client_id' 	=> ((getenv('LARAVEL_ENV')) ? 'B38AE3C52EA3BE85AC98F58FB882FA1B296F1D18' : '18051719157E761ACCA272D87CA799C402A45E81'),
-		'client_secret' => ((getenv('LARAVEL_ENV')) ? '6F0169254D544BA4B41B09D20FCBAEA74ACE6339' : '3EAF42B8B6D8E29A616436959243775783C11D57'),
+        'client_id' 	=> $_ENV['UNTAPPD_CLIENT_ID'],
+        'client_secret' => $_ENV['UNTAPPD_CLIENT_SECRET'],
 		'redirect_url'	=> Config::get('app.url').'/authenticate'
 	]);
 	$redirect = $untappd->getAuthoriseUrl($authcode);
 	
 	if($untappd->authorise($redirect) == true)
 	{
-		$responses = $untappd->getCommand('venue/checkins/448060/',[
+        $token = $untappd->getAccessToken();
+        Session::put('utauth',$token);
+        return Redirect::to('/');
+        /*
+		$responses = $untappd->query('venue/checkins/448060/',[
 			'limit' => '100'
 		]);
 
@@ -49,7 +57,8 @@ Route::get('/authenticate', function(){
 				$checkin_id = $checkin['checkin_id'];
 			}
 		}
-		dd($beers);	
+		dd($beers);
+        */
 	}
 	else
 	{
