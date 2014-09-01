@@ -10,8 +10,32 @@ class HomeController extends BaseController {
      * Bar - 4bf58dd8d48988d116941735 (inside Nightlife spot)
      * Music venue - 4bf58dd8d48988d1e5931735
      */
-	public $fs_category_id = ["4d4b7105d754a06376d81259","4bf58dd8d48988d1e5931735"]; // music venue
+	public $fs_category_id = ["4d4b7105d754a06376d81259","4bf58dd8d48988d1e5931735"];
+    
+    /**
+     * @var
+     */
+    private $untappd;
 
+    /**
+     * @var array
+     */
+    private $beers = [];
+
+    /**
+     * store the number of 0 starred reviews so this can be used to adjust the weighted mean (maybe)
+     * @var int
+     */
+    private $weightAdjust = 0;
+
+    public function __construct()
+    {
+        $this->untappd = new Untappd([
+            'client_id' 	=> getenv('UNTAPPD_CLIENT_ID'),
+            'client_secret' => getenv('UNTAPPD_CLIENT_SECRET')
+        ]);
+    }
+    
 	public function showHome()
 	{
         if ( !Session::get('utauth') ) {
@@ -43,15 +67,14 @@ class HomeController extends BaseController {
 		return $body;
 	}
 
-	public function getUntappdInfo($venue_id)
-	{
-        $untappd = new Untappd([
-            'client_id' 	=> getenv('UNTAPPD_CLIENT_ID'),
-            'client_secret' => getenv('UNTAPPD_CLIENT_SECRET')
-        ]);
-
-        // translate the foursquare venue to the untappd venue
-        $responses = $untappd->query('venue/foursquare_lookup/'.$venue_id,[
+    /**
+     * translate the foursquare venue to the untappd venue
+     * @param $venue_id
+     * @return mixed
+     */
+    private function foursquareToUntappd($venue_id)
+    {
+        $responses = $this->untappd->query('venue/foursquare_lookup/'.$venue_id,[
             'client_id'     => getenv('FOURSQUARE_CLIENT_ID'),
             'client_secret' => getenv('FOURSQUARE_CLIENT_SECRET'),
             'access_token'  => Session::get('utauth')
@@ -60,8 +83,35 @@ class HomeController extends BaseController {
         // venue ID used by Untappd
         $utVenueId = $responses['response']['venue']['items'][0]['venue_id'];
 
+        return $utVenueId;
+    }
+
+    /**
+     * Sort result set into beer name with average rating
+     * @todo look into weighted mean
+     * @return float
+     */
+    private function sortBeers()
+    {
+        $ratedBeers = [];
+        foreach($this->beers as $beer => $ratings)
+        {
+            $avg = array_sum($ratings) / count($ratings);
+            $ratedBeers[$beer] = $avg;
+        }
+        arsort($ratedBeers);
+        return $ratedBeers;
+    }
+
+    /**
+     * Get checkin information from Untappd venue by ID
+     * @param $venue_id
+     * @return mixed
+     */
+    public function getUntappdInfo($venue_id)
+	{
         // stupid code that isn't as clever as it thinks it is
-		$getthebeers = function(Untappd $untappd, $venue_id, $checkin_id = null,$beers = []) use (&$getthebeers){
+		$getthebeers = function($venue_id, $checkin_id = null) use (&$getthebeers){
 
             $params = [
                 'client_id'     => getenv('FOURSQUARE_CLIENT_ID'),
@@ -74,50 +124,31 @@ class HomeController extends BaseController {
                 $params = ($params + ['min_id' => $checkin_id]);
             }
 
-            $responses = $untappd->query('venue/checkins/'.$venue_id, $params);
+            $responses = $this->untappd->query('venue/checkins/'.$venue_id, $params);
 
 			foreach($responses['response']['checkins']['items'] as $checkin){
 				if($checkin['rating_score'] > 0){
-					$beer_key = $checkin['beer']['beer_name'].' by '.$checkin['brewery']['brewery_name'];
+					$beer_key = $checkin['beer']['beer_name'].'|'.$checkin['brewery']['brewery_name'];
 					//$beer_key = $checkin['beer']['bid'];
-					$beers[$beer_key][] = $checkin['rating_score'];
+					$this->beers[$beer_key][] = $checkin['rating_score'];
 					$checkin_id = $checkin['checkin_id'];
-				}
+				} else{
+                    $this->weightAdjust ++;
+                }
 			}
 
 			if($checkin_id == null){
-				return $getthebeers($untappd, $venue_id, $checkin_id, $beers);
+				return $getthebeers($venue_id, $checkin_id);
 			}else{
-				return $beers;
+				return $this->beers;
 			}
 		};
-		$thebeers = $getthebeers($untappd, $utVenueId);
+        $venue_id = $this->foursquareToUntappd($venue_id);
+		$getthebeers($venue_id);
 
-        return Response::Json($thebeers);
-        // LOOK INTO weighted mean / weighted average
-        /*
-		$unsortedBeers = array();
+        $sortedBeers = $this->sortBeers();
 
-		foreach($thebeers as $beer => $ratings)
-		{
-			$rating = average($ratings);
-			$unsortedBeers[$beer] = $rating;
-
-			$client = new GuzzleHttp\Client('http://api.untappd.com/v4/');
-			$requestString = '/v4/beer/info/'.$beer.'?client_id='. $this->ut_client_id .'&client_secret='. $this->ut_client_secret;
-			$request = $client->get($requestString);
-			$response = $request->send();
-			$responses = json_decode($response->getBody(),true);
-			$cleanresponse = $responses['response']['beer'];
-			$overallrating = $cleanresponse['rating_score'];
-			$ratings = array($ratings,$overallrating);
-			$beerdeets = $cleanresponse['beer_name'].' by '.$cleanresponse['brewery']['brewery_name'];
-			$unsortedBeers[$beerdeets] = $ratings;
-
-		}
-		arsort($unsortedBeers);
-		return Response::Json($unsortedBeers);
-        */
+        return Response::Json($sortedBeers);
 	}
 
 }
