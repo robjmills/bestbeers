@@ -4,13 +4,16 @@ use Untappd\Untappd;
 
 class HomeController extends BaseController {
 
-	/** Foursquare configs
+	/**
+     * Foursquare categories
      * Food - 4d4b7105d754a06374d81259
      * Nightlife spot - 4d4b7105d754a06376d81259
      * Bar - 4bf58dd8d48988d116941735 (inside Nightlife spot)
+     * pub - 4bf58dd8d48988d11b941735
      * Music venue - 4bf58dd8d48988d1e5931735
+     *
      */
-	public $fs_category_id = ["4d4b7105d754a06376d81259","4bf58dd8d48988d1e5931735"];
+	public $fs_category_id = ["4bf58dd8d48988d116941735","4bf58dd8d48988d11b941735"];
     
     /**
      * @var
@@ -44,7 +47,11 @@ class HomeController extends BaseController {
 		return View::make('home.index');
 	}
 
-	public function getFoursquareVenue()
+    /**
+     * Get foursquare list of local venues based on lat/long and category list
+     * @return \GuzzleHttp\Stream\StreamInterface|null
+     */
+    public function getFoursquareVenue()
 	{
 		$lat = Input::get('lat');
 		$long = Input::get('long');
@@ -59,8 +66,9 @@ class HomeController extends BaseController {
                 'll'            => $lat.','.$long,
                 'client_id'     => getenv('FOURSQUARE_CLIENT_ID'),
                 'client_secret' => getenv('FOURSQUARE_CLIENT_SECRET'),
-                'v'             => $date,
-                'categoryId'    => implode(',',$this->fs_category_id)
+                'v'             => '20140806',
+                'categoryId'    => implode(',',$this->fs_category_id),
+                'radius'        => '400'
              ]
         ]);
 		$body = $request->getBody();
@@ -100,7 +108,16 @@ class HomeController extends BaseController {
             $ratedBeers[$beer] = $avg;
         }
         arsort($ratedBeers);
-        return $ratedBeers;
+        $beerlist = [];
+        foreach($ratedBeers as $k=>$v){
+            $beer = explode('|',$k);
+            $beerlist[] = [
+                'name'  => $beer[0],
+                'brewery'  => $beer[1],
+                'rating'    =>  $v
+            ];
+        }
+        return $beerlist;
     }
 
     /**

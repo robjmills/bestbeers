@@ -1,5 +1,7 @@
 /bootstrap/compiled.php
 /vendor
+/public/vendor/jsviews/demos
+/public/vendor/jsviews/test
 composer.phar
 composer.lock
 .env.*.php

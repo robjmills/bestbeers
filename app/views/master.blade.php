@@ -5,80 +5,33 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
         <title>Beershere</title>
         <meta name="viewport" content="width=device-width">
-        <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-combined.no-icons.min.css" rel="stylesheet">
-        <link href="//netdna.bootstrapcdn.com/font-awesome/3.0.2/css/font-awesome.css" rel="stylesheet">
+        <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet">
+        <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
         {{ HTML::style('css/main.css') }}
         @yield('styles')
     </head>
 
     <body>
-        <div class="navbar navbar-fixed-top">
-           <div class="navbar-inner">
-             <div class="container">
-               <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-                 <span class="icon-bar"></span>
-                 <span class="icon-bar"></span>
-                 <span class="icon-bar"></span>
-               </a>
-               <a class="brand" href="">Beershere</a>
-             </div>
-           </div>
-         </div>
-        <div class="content">
-            @if (Session::has('flash-error'))
-                <div class="alert alert-error">  
-                    <p>{{ Session::get('flash-error') }}</p>
-                </div>
-            @endif
+    <div class="navbar navbar-default navbar-static-top" role="navigation">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#">Beerhere</a>
+            </div>
 
-            {{-- The main content container --}}
-            @yield('content')
         </div>
-    @yield('scripts')   
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-    {{ HTML::script('scripts/geoPosition.js') }}
-    <script type="text/javascript">
-    if(geoPosition.init()){  // Geolocation Initialisation
-            geoPosition.getCurrentPosition(success_callback,error_callback,{enableHighAccuracy:true});
-    }else{
-            // You cannot use Geolocation in this device
-            console.log('no geo');
-    }
-
-    // p : geolocation object
-    function success_callback(p){
-        $.ajax({
-			url: "/location?lat="+p.coords.latitude+"&long="+p.coords.longitude
-        }).done(function ( data ) {
-        	var locations = jQuery.parseJSON( data );
-            var venues = locations.response.venues;
-            var nearest = venues[0];
-
-            // hardcode to no1 harbourside
-            //nearest.id = '4e593b5962e1de72f6ef0d38';
-            //nearest.name = 'no1 harbourside';
-
-            $('#info').html("It looks like you're near " + nearest.name);
-            $('#beers').show();
-            $.ajax({
-                url: "/beers/"+nearest.id
-            }).done(function ( data ) {
-                var beers = "";
-                for (var key in data) {
-                  if (data.hasOwnProperty(key)) {
-                    beers = (beers + (key + " -> " + data[key] + "<br />"));
-                  }
-                }
-                $('#beers').html(beers);
-            });
-        });
-    }
-
-    function error_callback(p){
-        // p.message : error message
-        console.log(p.message);
-    }
-</script>
+    </div>
+    <div class="container">
+        @yield('content')
+    </div>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    {{ HTML::script('vendor/jsviews/jsviews.min.js') }}
+    {{ HTML::script('scripts/main.js') }}
+    @yield('scripts')
     </body>
-
 </html>

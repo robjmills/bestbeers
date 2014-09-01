@@ -1,0 +1,11 @@
+{
+    "name": "beerhere",
+    "version": "0.1.0",
+    "authors": [
+        "Rob Mills <robjmills@gmail.com>"
+    ],
+    "description": "Find the best beer in the best local pubs and bars",
+    "dependencies": {
+        "jsviews" : "~1.0.0"
+    }
+}
