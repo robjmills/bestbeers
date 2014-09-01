@@ -19,8 +19,8 @@ Route::get('/beers/{venue_id}', 'HomeController@getUntappdInfo');
 Route::get('/login', function(){
 
 	$untappd = new Untappd([
-		'client_id' 	=> $_ENV['UNTAPPD_CLIENT_ID'],
-		'client_secret' => $_ENV['UNTAPPD_CLIENT_SECRET'],
+		'client_id' 	=> getenv('UNTAPPD_CLIENT_ID'),
+		'client_secret' => getenv('UNTAPPD_CLIENT_SECRET'),
 		'redirect_url'	=> Config::get('app.url').'/authenticate'
 	]);
 	$redirect = $untappd->getAuthenticateUrl();
@@ -34,8 +34,8 @@ Route::get('/authenticate', function(){
 	
 	// request access token
 	$untappd = new Untappd([
-        'client_id' 	=> $_ENV['UNTAPPD_CLIENT_ID'],
-        'client_secret' => $_ENV['UNTAPPD_CLIENT_SECRET'],
+        'client_id' 	=> getenv('UNTAPPD_CLIENT_ID'),
+        'client_secret' => getenv('UNTAPPD_CLIENT_SECRET'),
 		'redirect_url'	=> Config::get('app.url').'/authenticate'
 	]);
 	$redirect = $untappd->getAuthoriseUrl($authcode);

@@ -33,8 +33,8 @@ class HomeController extends BaseController {
 		$request = $client->get('https://api.foursquare.com/v2/venues/search',[
             'query' => [
                 'll'            => $lat.','.$long,
-                'client_id'     => $_ENV['FOURSQUARE_CLIENT_ID'],
-                'client_secret' => $_ENV['FOURSQUARE_CLIENT_SECRET'],
+                'client_id'     => getenv('FOURSQUARE_CLIENT_ID'),
+                'client_secret' => getenv('FOURSQUARE_CLIENT_SECRET'),
                 'v'             => $date,
                 'categoryId'    => implode(',',$this->fs_category_id)
              ]
@@ -46,14 +46,14 @@ class HomeController extends BaseController {
 	public function getUntappdInfo($venue_id)
 	{
         $untappd = new Untappd([
-            'client_id' 	=> $_ENV['UNTAPPD_CLIENT_ID'],
-            'client_secret' => $_ENV['UNTAPPD_CLIENT_SECRET']
+            'client_id' 	=> getenv('UNTAPPD_CLIENT_ID'),
+            'client_secret' => getenv('UNTAPPD_CLIENT_SECRET')
         ]);
 
         // translate the foursquare venue to the untappd venue
         $responses = $untappd->query('venue/foursquare_lookup/'.$venue_id,[
-            'client_id'     => $_ENV['FOURSQUARE_CLIENT_ID'],
-            'client_secret' => $_ENV['FOURSQUARE_CLIENT_SECRET'],
+            'client_id'     => getenv('FOURSQUARE_CLIENT_ID'),
+            'client_secret' => getenv('FOURSQUARE_CLIENT_SECRET'),
             'access_token'  => Session::get('utauth')
         ]);
 
@@ -64,8 +64,8 @@ class HomeController extends BaseController {
 		$getthebeers = function(Untappd $untappd, $venue_id, $checkin_id = null,$beers = []) use (&$getthebeers){
 
             $params = [
-                'client_id'     => $_ENV['FOURSQUARE_CLIENT_ID'],
-                'client_secret' => $_ENV['FOURSQUARE_CLIENT_SECRET'],
+                'client_id'     => getenv('FOURSQUARE_CLIENT_ID'),
+                'client_secret' => getenv('FOURSQUARE_CLIENT_SECRET'),
                 'ut_result_limit' => 50,
                 'access_token'  => Session::get('utauth')
             ];
