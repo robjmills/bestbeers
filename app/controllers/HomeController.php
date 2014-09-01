@@ -94,6 +94,7 @@ class HomeController extends BaseController {
 		$thebeers = $getthebeers($untappd, $utVenueId);
 
         return Response::Json($thebeers);
+        // LOOK INTO weighted mean / weighted average
         /*
 		$unsortedBeers = array();
 

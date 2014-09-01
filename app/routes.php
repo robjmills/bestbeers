@@ -42,23 +42,10 @@ Route::get('/authenticate', function(){
 	
 	if($untappd->authorise($redirect) == true)
 	{
+        // get access token and store in session
         $token = $untappd->getAccessToken();
         Session::put('utauth',$token);
         return Redirect::to('/');
-        /*
-		$responses = $untappd->query('venue/checkins/448060/',[
-			'limit' => '100'
-		]);
-
-		foreach($responses['response']['checkins']['items'] as $checkin){
-			if($checkin['rating_score'] > 0){
-				$beer_key = $checkin['beer']['beer_name'].' by '.$checkin['brewery']['brewery_name'];
-				$beers[$beer_key][] = $checkin['rating_score'];
-				$checkin_id = $checkin['checkin_id'];
-			}
-		}
-		dd($beers);
-        */
 	}
 	else
 	{
@@ -66,10 +53,3 @@ Route::get('/authenticate', function(){
 	}
 
 });
-
-/*
-Route::get('/', 'HomeController@showWelcome');
-Route::get('/location', 'HomeController@getLocation');
-Route::get('/beers/{venue_id}', 'HomeController@getUntappdInfo');
-*/
-// LOOK INTO weighted mean / weighted average
