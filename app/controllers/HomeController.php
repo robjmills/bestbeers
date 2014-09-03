@@ -37,8 +37,12 @@ class HomeController extends BaseController {
             ]
         ]);
     }
-    
-	public function showHome()
+
+    /**
+     * Show homepage or navigate to Untappd auth if nothing stored
+     * @return mixed
+     */
+    public function showHome()
 	{
         if ( !Session::get('utauth') ) {
             return Redirect::to('/login');
