@@ -33,7 +33,8 @@ class HomeController extends BaseController {
             'cache'         => [
                 'driver' => Config::get('cache.driver'),
                 'path'   => Config::get('cache.path'),
-                'prefix' => Config::get('cache.prefix')
+                'prefix' => Config::get('cache.prefix'),
+                'redis'  => Config::get('database.redis')
             ]
         ]);
     }
@@ -109,7 +110,7 @@ class HomeController extends BaseController {
         foreach($beers as $beer => $ratings)
         {
             $avg = array_sum($ratings) / count($ratings);
-            $ratedBeers[$beer] = $avg;
+            $ratedBeers[$beer] = round($avg,2);
         }
         arsort($ratedBeers);
         $beerlist = [];
