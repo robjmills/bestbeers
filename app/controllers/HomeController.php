@@ -34,7 +34,8 @@ class HomeController extends BaseController {
                 'driver' => Config::get('cache.driver'),
                 'path'   => Config::get('cache.path'),
                 'prefix' => Config::get('cache.prefix'),
-                'redis'  => Config::get('database.redis')
+                'redis'  => Config::get('database.redis'),
+                'duration' => 5
             ]
         ]);
     }
