@@ -5,7 +5,6 @@ web1:
   php_version: 5.4.14
   shared_writable_dirs:
     - app/storage/cache
-    - app/storage/cache/clockwork
     - app/storage/logs
     - app/storage/meta
     - app/storage/sessions

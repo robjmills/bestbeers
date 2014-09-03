@@ -12,9 +12,11 @@
 	"require": {
 		"laravel/framework": "4.2.*",
 		"guzzlehttp/guzzle": "4.*",
-		"robjmills/untappd": "dev-master@dev",
-        "itsgoingd/clockwork": "1.*"
+		"robjmills/untappd": "dev-master@dev"
 	},
+    "require-dev": {
+        "itsgoingd/clockwork": "1.*"
+    },
 	"autoload": {
 		"classmap": [
 			"app/commands",
