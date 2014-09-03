@@ -27,5 +27,5 @@ web1:
     - "php artisan migrate --env=pagoda"
     - "php artisan db:seed --env=pagoda"
   after_deploy:
-    - "rm -f app/storage/cache/*"
-    - "rm -f app/storage/views/*"
+    - "rm -rf app/storage/cache/*"
+    - "rm -rf app/storage/views/*"

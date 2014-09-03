@@ -18,7 +18,7 @@ return array(
         'cluster' => false,
 
         'default' => array(
-            'host'     => 'tcp://tunnel.pagodabox.com',
+            'host'     => 'tunnel.pagodabox.com',
             'port'     => 6379,
             'database' => 0,
         ),
