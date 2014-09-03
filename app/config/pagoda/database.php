@@ -12,5 +12,16 @@ return array(
 			'collation' => 'utf8_unicode_ci',
 			'prefix'    => '',
 		),
-	)
+	),
+    'redis' => array(
+
+        'cluster' => false,
+
+        'default' => array(
+            'host'     => 'tcp://tunnel.pagodabox.com',
+            'port'     => 6379,
+            'database' => 0,
+        ),
+
+    ),
 );
