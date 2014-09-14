@@ -120,10 +120,60 @@ class HomeController extends BaseController {
             $beerlist[] = [
                 'name'  => $beer[0],
                 'brewery'  => $beer[1],
+                'abv'  => $beer[2],
+                'style'  => $beer[3],
+                'label'  => $beer[4],
+                'stars' => $this->starRating($v),
                 'rating'    =>  $v
             ];
         }
         return $beerlist;
+    }
+
+    public function starRating($rating)
+    {
+        if( $rating <= 0.5){
+
+        }
+
+
+        switch($rating){
+
+            default:
+                $img = '<i class="fa fa-star-o"></i><i class="fa fa-star-o"></i><i class="fa fa-star-o"></i><i class="fa fa-star-o"></i><i class="fa fa-star-o"></i>';
+                break;
+            case ( $rating <= 0.5 ):
+                $img = '<i class="fa fa-star-half-o"></i><i class="fa fa-star-o"></i><i class="fa fa-star-o"></i><i class="fa fa-star-o"></i><i class="fa fa-star-o"></i>';
+                break;
+            case ( $rating > 0.5 && $rating <= 1 ):
+                $img = '<i class="fa fa-star"></i><i class="fa fa-star-o"></i><i class="fa fa-star-o"></i><i class="fa fa-star-o"></i><i class="fa fa-star-o"></i>';
+                break;
+            case ( $rating > 1 && $rating <= 1.5 ):
+                $img = '<i class="fa fa-star"></i><i class="fa fa-star-half-o"></i><i class="fa fa-star-o"></i><i class="fa fa-star-o"></i><i class="fa fa-star-o"></i>';
+                break;
+            case ( $rating > 1.5 && $rating <= 2 ):
+                $img = '<i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star-o"></i><i class="fa fa-star-o"></i><i class="fa fa-star-o"></i>';
+                break;
+            case ( $rating > 2 && $rating <= 2.5 ):
+                $img = '<i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star-half-o"></i><i class="fa fa-star-o"></i><i class="fa fa-star-o"></i>';
+                break;
+            case ( $rating > 2.5 && $rating <= 3 ):
+                $img = '<i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star-o"></i><i class="fa fa-star-o"></i>';
+                break;
+            case ( $rating > 3 && $rating <= 3.5 ):
+                $img = '<i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star-half-o"></i><i class="fa fa-star-o"></i>';
+                break;
+            case ( $rating > 3.5 && $rating <= 4 ):
+                $img = '<i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star-o"></i>';
+                break;
+            case ( $rating > 4 && $rating <= 4.5 ):
+                $img = '<i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star-half-o"></i>';
+                break;
+            case ( $rating > 4.5):
+                $img = '<i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i>';
+                break;
+        }
+        return $img;
     }
 
     /**
@@ -166,7 +216,11 @@ class HomeController extends BaseController {
 
             foreach($responses['response']['checkins']['items'] as $checkin){
                 if($checkin['rating_score'] > 0){
-                    $beer_key = $checkin['beer']['beer_name'].'|'.$checkin['brewery']['brewery_name'];
+                    $beer_key = $checkin['beer']['beer_name']
+                        .'|'.$checkin['brewery']['brewery_name']
+                        .'|'.$checkin['beer']['beer_abv']
+                        .'|'.$checkin['beer']['beer_style']
+                        .'|'.$checkin['beer']['beer_label'];
                     $beers[$beer_key][] = $checkin['rating_score'];
                     $checkin_id = $checkin['checkin_id'];
                 } else{
