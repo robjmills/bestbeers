@@ -5,7 +5,7 @@
 <a class="btn btn-default btn-xs" style="display: none" id="back"><span class="glyphicon glyphicon-chevron-left"></span> Back</a>
 <h3 id="chosen" style="display: none"></h3>
 <p id="info" class="lead"><i class="fa fa-circle-o-notch fa-spin"></i> <span id="msg">locating you...</span></p>
-<ul id="venues" style="display: none;"></ul>
+<ul id="venues" style="display: none;" class="list-unstyled"></ul>
 <ul id="beers" style="display: none;" class="list-unstyled"></ul>
 
 <script id="venuetmpl" type="text/x-jsrender">
@@ -13,6 +13,14 @@
 </script>
 
 <script id="beertmpl" type="text/x-jsrender">
-      <li><img src="@{{:label}}" width="50" height="50" class="img-thumbnail" />  @{{:stars}} <strong>@{{:name}} </strong> <small class="muted">(A @{{:abv}}% @{{:style}} by @{{:brewery}})</small></li>
+      <li>
+          <div class="media">
+            <img src="@{{:label}}" width="50" height="50" class="img-thumbnail pull-left" />
+            <div class="media-body">
+              <h4 class="media-heading">@{{:name}} @{{:stars}}</h4>
+                  <small class="muted">A @{{:abv}}% @{{:style}} by <strong>@{{:brewery}}</strong></small>
+            </div>
+          </div>
+      </li>
 </script>
 @stop
