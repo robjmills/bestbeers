@@ -4,8 +4,11 @@
 /public/vendor/jsviews/test
 composer.phar
 composer.lock
+/.idea
 .env.*.php
 .env.php
 .DS_Store
 Thumbs.db
 dump.rdb
+Boxfile
+Boxfile.install
