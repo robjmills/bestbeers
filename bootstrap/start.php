@@ -25,16 +25,9 @@ $app = new Illuminate\Foundation\Application;
 */
 
 $env = $app->detectEnvironment(array(
-
-	'local' => array('Robs-rMBP.local'),
-	'pagoda' => array('Robs-rMBP.local'),
-
+    'production' => array('harmonious-badlands'),
+    'local' => array('Robs-rMBP.local')
 ));
-
-$env = $app->detectEnvironment(function()
-{
-    return (isset($_SERVER['LARAVEL_ENV'])) ? $_SERVER['LARAVEL_ENV'] : 'local';
-});
 
 /*
 |--------------------------------------------------------------------------
