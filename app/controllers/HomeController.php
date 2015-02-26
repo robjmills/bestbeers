@@ -14,20 +14,21 @@ class HomeController extends BaseController {
      *
      */
 	public $fs_category_id = ["4bf58dd8d48988d116941735","4bf58dd8d48988d11b941735"];
-    
+
     /**
-     * @var
+     * @var $untappd Untappd
      */
     private $untappd;
 
+    /**
+     * @var $beers array
+     */
     private $beers;
-    private $dates;
 
     /**
-     * store the number of 0 starred reviews so this can be used to adjust the weighted mean (maybe)
-     * @var int
+     * @var $dates array
      */
-    private $weightAdjust = 0;
+    private $dates;
 
     public function __construct()
     {
@@ -64,7 +65,6 @@ class HomeController extends BaseController {
 	{
 		$lat = Input::get('lat');
 		$long = Input::get('long');
-		$date = date("Ymd");
 
 		// Create a Guzzle Client
 		$client = new GuzzleHttp\Client();
