@@ -6,8 +6,6 @@
   ],
   "description": "Find the best beer in the best local pubs and bars",
   "dependencies": {
-    "jsviews": "~1.0.0",
-    "moment": "~2.9.0",
-    "livestamp": "git://github.com/mattbradley/livestampjs.git#master"
+    "jsviews": "~1.0.0"
   }
 }
