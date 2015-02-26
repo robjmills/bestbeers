@@ -18,7 +18,9 @@
             <img src="@{{:label}}" width="50" height="50" class="img-thumbnail pull-left" />
             <div class="media-body">
               <h4 class="media-heading">@{{:name}} @{{:stars}}</h4>
-                  <small class="muted">A @{{:abv}}% @{{:style}} by <strong>@{{:brewery}}</strong></small>
+                  <small class="muted">A @{{:abv}}% @{{:style}} by <strong>@{{:brewery}}</strong>
+                  <em>(Last seen: @{{:last_seen}})</em>
+                  </small>
             </div>
           </div>
       </li>

@@ -7,6 +7,7 @@
         <meta name="viewport" content="width=device-width">
         <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet">
         <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+        <link href="//fonts.googleapis.com/css?family=Montserrat" rel="stylesheet" type="text/css">
         {{ HTML::style('css/main.css') }}
         @yield('styles')
     </head>
@@ -15,7 +16,7 @@
     <div class="navbar navbar-default navbar-static-top" role="navigation">
         <div class="container">
             <div class="navbar-header">
-                <a class="navbar-brand" href="#">Bestbeers.in</a>
+                <a class="navbar-brand" href="#">BESTBEERS<small>.in</small></a>
             </div>
 
         </div>

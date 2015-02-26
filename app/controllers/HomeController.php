@@ -1,4 +1,5 @@
 <?php
+use Carbon\Carbon;
 use Untappd\Untappd;
 
 class HomeController extends BaseController {
@@ -18,6 +19,9 @@ class HomeController extends BaseController {
      * @var
      */
     private $untappd;
+
+    private $beers;
+    private $dates;
 
     /**
      * store the number of 0 starred reviews so this can be used to adjust the weighted mean (maybe)
@@ -102,13 +106,12 @@ class HomeController extends BaseController {
     /**
      * Sort result set into beer name with average rating
      * @todo look into weighted mean
-     * @param integer $beers
      * @return float
      */
-    private function sortBeers($beers)
+    private function sortBeers()
     {
         $ratedBeers = [];
-        foreach($beers as $beer => $ratings)
+        foreach($this->beers as $beer => $ratings)
         {
             $avg = array_sum($ratings) / count($ratings);
             $ratedBeers[$beer] = round($avg,2);
@@ -124,7 +127,8 @@ class HomeController extends BaseController {
                 'style'  => $beer[3],
                 'label'  => $beer[4],
                 'stars' => $this->starRating($v),
-                'rating'    =>  $v
+                'rating'    =>  $v,
+                'last_seen' => Carbon::createFromTimeStamp($this->dates[$k])->diffForHumans()
             ];
         }
         return $beerlist;
@@ -184,8 +188,8 @@ class HomeController extends BaseController {
     public function getUntappdInfo($venue_id)
 	{
         $venue_id = $this->foursquareToUntappd($venue_id);
-        $beers = $this->getCheckins($venue_id);
-        $sortedBeers = $this->sortBeers($beers);
+        $this->beers = $this->getCheckins($venue_id);
+        $sortedBeers = $this->sortBeers();
         return Response::Json($sortedBeers);
 	}
 
@@ -221,10 +225,21 @@ class HomeController extends BaseController {
                         .'|'.$checkin['beer']['beer_abv']
                         .'|'.$checkin['beer']['beer_style']
                         .'|'.$checkin['beer']['beer_label'];
-                    $beers[$beer_key][] = $checkin['rating_score'];
+                    $beers[$beer_key]['rating'] = $checkin['rating_score'];
+                    $date = strtotime($checkin['created_at']);
+
+                    /**
+                     * set the date key
+                     * if it's already set then check if this latest checkin is more recent
+                     */
+                    if(isset($this->dates[$beer_key])){
+                        if($date > $this->dates[$beer_key]){
+                            $this->dates[$beer_key] = $date;
+                        }
+                    } else {
+                        $this->dates[$beer_key] = $date;
+                    }
                     $checkin_id = $checkin['checkin_id'];
-                } else{
-                    $this->weightAdjust ++;
                 }
             }
         }

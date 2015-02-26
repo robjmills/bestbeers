@@ -1,3 +1,7 @@
+.navbar-brand{
+	font-family: Montserrat, Helvetica, sans-serif;
+}
+
 #beers li{
     padding: 2px;
 }
