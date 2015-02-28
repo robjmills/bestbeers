@@ -81,7 +81,9 @@ class HomeController extends BaseController {
              ]
         ]);
 		$body = $request->getBody();
-		return $body;
+        $response = Response::make($body, 200);
+        $response->header('Content-Type', 'application/json');
+        return $response;
 	}
 
     /**

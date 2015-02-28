@@ -42,9 +42,7 @@
             url: location
         }).done(function ( data ) {
 
-            var locations = jQuery.parseJSON( data );
-            var venues = locations.response.venues;
-
+            var venues = data.response.venues;
             var template = $.templates("#venuetmpl");
             template.link("#venues", venues);
             $('#info').hide();
